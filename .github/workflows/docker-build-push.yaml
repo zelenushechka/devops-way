@@ -51,9 +51,10 @@ jobs:
 
       - name: Update Deployment YAML Files
         run: |
-          cd kubernetes
+          cd kubernetes/main-api
           IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
           sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${IMAGE_TAG}|" main-deployment.yaml
+          cd kubernetes/auxiliary-service
           sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${IMAGE_TAG}|" auxiliary-deployment.yaml
           
       - name: Commit & Push Updates
@@ -62,7 +63,7 @@ jobs:
           cd kubernetes
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
-          git add main-deployment.yaml auxiliary-deployment.yaml
+          git add main-api/main-deployment.yaml auxiliary-service/auxiliary-deployment.yaml
           git commit -m "Bumped service versions to ${IMAGE_TAG}"
           git push origin main
 

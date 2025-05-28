@@ -12,7 +12,7 @@ provider "aws" {
   region = "eu-central-1"
 }
 
-# Create buckets
+# Create S3 buckets
 
 locals {
   bucket_names = [

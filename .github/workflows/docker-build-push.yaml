@@ -61,7 +61,7 @@ jobs:
           cd kubernetes
           git add main-deployment.yaml auxiliary-deployment.yaml
           git commit -m "Bumped service versions to ${IMAGE_TAG}"
-          git push
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/zelenushechka/devops-way.git
 
 
 #  update-configmap:
@@ -73,15 +73,15 @@ jobs:
 #        run: |
 #          kubectl create configmap service-version --namespace devops-app --from-literal
 
-  authenticate-aws:
-    name: Authenticate with AWS using GitHub OIDC
-    runs-on: ubuntu-latest
-    steps:
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v4
-        with:
-          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE_ARN }}
-          aws-region: eu-central-1
+  # authenticate-aws:
+  #   name: Authenticate with AWS using GitHub OIDC
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Configure AWS Credentials
+  #       uses: aws-actions/configure-aws-credentials@v4
+  #       with:
+  #         role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE_ARN }}
+  #         aws-region: eu-central-1
 
-      - name: Verify AWS Authentication
-        run: aws sts get-caller-identity
+  #     - name: Verify AWS Authentication
+  #       run: aws sts get-caller-identity

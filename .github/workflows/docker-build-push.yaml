@@ -11,8 +11,7 @@ jobs:
     name: Build & Push Docker Images
     runs-on: ubuntu-latest
     outputs:
-      main_image_tag: ${{ steps.tag.outputs.IMAGE_TAG }}
-      auxiliary_image_tag: ${{ steps.tag.outputs.IMAGE_TAG }}
+      image_tag: ${{ steps.tag.outputs.IMAGE_TAG }}
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -62,13 +61,9 @@ jobs:
       - name: Update Deployment YAML Files
         run: |
           cd kubernetes
-          MAIN_IMAGE_TAG="${{ needs.build-and-push.outputs.main_image_tag }}"
-          AUX_IMAGE_TAG="${{ needs.build-and-push.outputs.auxiliary_image_tag }}"
-          echo "Main Image Tag: $MAIN_IMAGE_TAG"
-          echo "Auxiliary Image Tag: $AUX_IMAGE_TAG"
-          sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${MAIN_IMAGE_TAG}|" main-deployment.yaml
-          sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${AUX_IMAGE_TAG}|" auxiliary-deployment.yaml
-          cat main-deployment.yaml auxiliary-deployment.yaml  # Debugging output
+          IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
+          sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${IMAGE_TAG}|" main-deployment.yaml
+          sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${IMAGE_TAG}|" auxiliary-deployment.yaml
           
       - name: Commit & Push Updates
         run: |
@@ -89,15 +84,15 @@ jobs:
 #        run: |
 #          kubectl create configmap service-version --namespace devops-app --from-literal
 
-  # authenticate-aws:
-  #   name: Authenticate with AWS using GitHub OIDC
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Configure AWS Credentials
-  #       uses: aws-actions/configure-aws-credentials@v4
-  #       with:
-  #         role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE_ARN }}
-  #         aws-region: eu-central-1
+  authenticate-aws:
+    name: Authenticate with AWS using GitHub OIDC
+    runs-on: ubuntu-latest
+    steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ secrets.AWS_GITHUB_OIDC_ROLE_ARN }}
+          aws-region: eu-central-1
 
-  #     - name: Verify AWS Authentication
-  #       run: aws sts get-caller-identity
+      - name: Verify AWS Authentication
+        run: aws sts get-caller-identity

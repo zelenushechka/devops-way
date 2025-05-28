@@ -8,6 +8,7 @@ spec:
   source:
     repoURL: "https://github.com/zelenushechka/devops-way.git"
     targetRevision: main
+    path: kubernetes
   destination:
     server: https://kubernetes.default.svc
     namespace: devops-app

@@ -48,11 +48,22 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # - name: Update Deployment YAML Files
+      #   run: |
+      #     cd kubernetes
+      #     MAIN_IMAGE_TAG="${{ needs.build-and-push.outputs.main_image_tag }}"
+      #     AUX_IMAGE_TAG="${{ needs.build-and-push.outputs.auxiliary_image_tag }}"
+      #     sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${MAIN_IMAGE_TAG}|" main-deployment.yaml
+      #     sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${AUX_IMAGE_TAG}|" auxiliary-deployment.yaml
+      #     cat main-deployment.yaml auxiliary-deployment.yaml  # Debugging output
+
       - name: Update Deployment YAML Files
         run: |
           cd kubernetes
           MAIN_IMAGE_TAG="${{ needs.build-and-push.outputs.main_image_tag }}"
           AUX_IMAGE_TAG="${{ needs.build-and-push.outputs.auxiliary_image_tag }}"
+          echo "Main Image Tag: $MAIN_IMAGE_TAG"
+          echo "Auxiliary Image Tag: $AUX_IMAGE_TAG"
           sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${MAIN_IMAGE_TAG}|" main-deployment.yaml
           sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${AUX_IMAGE_TAG}|" auxiliary-deployment.yaml
           cat main-deployment.yaml auxiliary-deployment.yaml  # Debugging output

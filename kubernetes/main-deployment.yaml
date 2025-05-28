@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: main-api
-          image: main-api:latest
+          image: zelenushechka/main-api:
           imagePullPolicy: Never
           ports:
             - containerPort: 8000

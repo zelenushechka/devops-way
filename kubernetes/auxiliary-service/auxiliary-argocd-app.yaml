@@ -4,6 +4,7 @@ metadata:
   name: auxiliary-service
   namespace: argocd
 spec:
+  project: default
   destination:
     namespace: auxiliary-service-ns
     server: https://kubernetes.default.svc

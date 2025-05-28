@@ -54,7 +54,7 @@ jobs:
           cd kubernetes/main-api
           IMAGE_TAG="${{ needs.build-and-push.outputs.image_tag }}"
           sed -i "s|image: zelenushechka/main-api:.*|image: zelenushechka/main-api:${IMAGE_TAG}|" main-deployment.yaml
-          cd kubernetes/auxiliary-service
+          cd ../auxiliary-service
           sed -i "s|image: zelenushechka/auxiliary-service:.*|image: zelenushechka/auxiliary-service:${IMAGE_TAG}|" auxiliary-deployment.yaml
           
       - name: Commit & Push Updates

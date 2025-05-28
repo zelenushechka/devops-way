@@ -44,29 +44,6 @@ resource "aws_ssm_parameter" "project_param" {
   type  = "String"
   value = "example_value"
 }
-# Create container IAM role
-resource "aws_iam_role" "github_oidc_role" {
-  name = "GitHubOIDCRole"
-  assume_role_policy = <<EOF
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Effect": "Allow",
-      "Principal": {
-        "Federated": "arn:aws:iam::841147599677:oidc-provider/token.actions.githubusercontent.com"
-      },
-      "Action": "sts:AssumeRoleWithWebIdentity",
-      "Condition": {
-         "StringEquals": {
-           "token.actions.githubusercontent.com:sub": "repo:zelenushechka/devops-way:ref:refs/heads/main"
-         }
-      }
-    }
-  ]
-}
-EOF
-}
 
 # Create container IAM User
 resource "aws_iam_user" "devops_way_user" {
@@ -115,10 +92,6 @@ output "s3_bucket_names" {
 
 output "ssm_parameter_name" {
   value = aws_ssm_parameter.project_param.name
-}
-
-output "github_oidc_role_arn" {
-  value = aws_iam_role.github_oidc_role.arn
 }
 
 output "iam_user_name" {

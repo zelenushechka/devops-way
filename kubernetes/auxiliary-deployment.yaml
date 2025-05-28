@@ -15,7 +15,7 @@ spec:
     spec:
       containers:
         - name: auxiliary-service
-          image: zelenushechka/auxiliary-service:20250528210111
+          image: zelenushechka/auxiliary-service:
           imagePullPolicy: Always
           ports:
             - containerPort: 8001

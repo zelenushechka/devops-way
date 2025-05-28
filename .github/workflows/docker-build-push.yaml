@@ -50,6 +50,7 @@ jobs:
 
       - name: Update Deployment YAML Files
         run: |
+          cd kubernetes
           sed -i "s|image: main-api:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/main-api:${IMAGE_TAG}|" main-deployment.yaml
           sed -i "s|image: auxiliary-service:.*|image: ${{ secrets.DOCKER_HUB_USERNAME }}/auxiliary-service:${IMAGE_TAG}|" auxiliary-deployment.yaml
 

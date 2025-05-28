@@ -1,17 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: devops-app
+  name: auxiliary-service
   namespace: argocd
 spec:
-  project: default
-  source:
-    repoURL: "https://github.com/zelenushechka/devops-way.git"
-    targetRevision: main
-    path: kubernetes
   destination:
+    namespace: auxiliary-service-ns
     server: https://kubernetes.default.svc
-    namespace: devops-app
+  source:
+    repoURL: https://github.com/zelenushechka/devops-way.git
+    path: kubernetes/auxiliary-service
+    targetRevision: main
   syncPolicy:
     automated:
       prune: true

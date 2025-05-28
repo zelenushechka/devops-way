@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: main-api
-  namespace: devops-app
+  namespace: main-api-ns
 spec:
   replicas: 1
   selector:

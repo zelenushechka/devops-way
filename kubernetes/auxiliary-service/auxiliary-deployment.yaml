@@ -2,7 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: auxiliary-service
-  namespace: devops-app
+  namespace: auxiliary-service-ns
 spec:
   replicas: 1
   selector:

@@ -2,6 +2,10 @@ name: Build & Deploy
 
 on: workflow_dispatch
 
+permissions:
+  id-token: write
+  contents: read
+
 jobs:
   build-and-push:
     name: Build & Push Docker Images
@@ -25,11 +29,14 @@ jobs:
 
       - name: Build & Push Main API Image
         run: |
+          IMAGE_TAG=$(date +%Y%m%d%H%M%S)
+          cd app
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/main-api:${IMAGE_TAG} -f Dockerfile.main .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/main-api:${IMAGE_TAG}
 
       - name: Build & Push Auxiliary Service Image
         run: |
+          cd app
           docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/auxiliary-service:${IMAGE_TAG} -f Dockerfile.auxiliary .
           docker push ${{ secrets.DOCKER_HUB_USERNAME }}/auxiliary-service:${IMAGE_TAG}
 

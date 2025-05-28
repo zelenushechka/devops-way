@@ -58,9 +58,11 @@ jobs:
         run: |
           git config --global user.name "GitHub Actions"
           git config --global user.email "actions@github.com"
+          cd kubernetes
           git add main-deployment.yaml auxiliary-deployment.yaml
           git commit -m "Bumped service versions to ${IMAGE_TAG}"
           git push
+
 
 #  update-configmap:
 #    name: Update ConfigMap with New Version

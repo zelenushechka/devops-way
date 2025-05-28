@@ -21,4 +21,5 @@ spec:
             - containerPort: 8000
           env:
             - name: AUX_SERVICE_URL
-              value: "http://auxiliary-service.devops-app.svc.cluster.local:8001"
+              value: "http://auxiliary-service.auxiliary-service-ns.svc.cluster.local:8001"
+

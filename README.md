@@ -1,7 +1,7 @@
 # 🌍 1. Terraform Deployment
 
 ## 📌 Overview
-This part explains how to deploy the **AWS infrastructure** using **Terraform**, including **S3 storage, IAM policies, and AWS Parameter Store**.
+Deploy the **AWS infrastructure** using **Terraform**, including **S3 storage, IAM policies, and AWS Parameter Store**.
 
 ---
 
@@ -14,35 +14,35 @@ Ensure you have:
 
 ---
 
-## 🔧 2. Terraform Setup
+##  2. Terraform Setup
 
-### ✅ **Clone the Repository**
+###  **Clone the Repository**
 ```sh
 git clone https://github.com/zelenushechka/devops-way.git
 cd devops-way/terraform
 ```
-### ✅ **Initialize Terraform**
+###  **Initialize Terraform**
 ```sh
 terraform init
 ```
-### ✅ **Review the Execution Plan**
+###  **Review the Execution Plan**
 ```sh
 terraform plan
 ```
-### ✅ **Apply the Infrastructure**
+###  **Apply the Infrastructure**
 ```sh
 terraform apply -auto-approve
 ```
 
 ## 🏗️ 3. Infrastructure Breakdown
-### 📌 S3 Buckets
+###  S3 Buckets
 These buckets provide storage for logs, state files, CI/CD caching.
 Created using `aws_s3_bucket`
 **List Created Buckets**
 ```sh
 aws s3 ls
 ```
-### 📌 AWS Parameter Store
+### AWS Parameter Store
 Manages configuration values securely.
 Created using aws_ssm_parameter
 Used for environment variables
@@ -50,7 +50,7 @@ Used for environment variables
 ```sh
 aws ssm get-parameter --name "/devops/way/config" --query "Parameter.Value"
 ```
-###📌 IAM User & Policy
+### IAM User & Policy
 Manages authentication for accessing S3 and Parameter Store.
 User: devops-way-aws-user
 Policy allows:
@@ -68,9 +68,9 @@ terraform destroy -auto-approve
 ```
 
 
-# CI/CD Pipeline Documentation
+# 🔧 CI/CD Pipeline Documentation
 
-This document describes how the CI/CD pipeline for the project is implemented using GitHub Actions. The pipeline is designed following industry best practices and automates the following tasks:
+Implement  CI/CD pipeline for the project using GitHub Actions. The pipeline is designed following industry best practices and automates the following tasks:
 
 - **Building and pushing Docker images** to a container registry.
 - **Automatically updating Kubernetes deployments** when a new image is pushed.
@@ -79,34 +79,15 @@ This document describes how the CI/CD pipeline for the project is implemented us
 
 ---
 
-## 1. Overview
+## 📌 1. Overview
 
 The GitHub Actions workflow (named **Build & Deploy**) consists of three main jobs:
 
 1. **Build and Push Docker Images**  
-   - Generates a unique image tag (using the current timestamp).
-   - Logs into Docker Hub using credentials stored in GitHub secrets.
-   - Builds Docker images for both the Main API and Auxiliary Service.
-   - Pushes the built images to Docker Hub.
-
 2. **Update Kubernetes Deployments & Commit Changes**  
-   - Checks out the repository.
-   - Updates the image references in the Kubernetes YAML files (located in `kubernetes/main-api` and `kubernetes/auxiliary-service`) by replacing the tag with the new one.
-   - Commits and pushes the updated deployment files to GitHub. This update is then picked up by continuous-delivery tools (e.g., ArgoCD) for deployment.
-
 3. **Authenticate with AWS using GitHub OIDC**  
-   - Uses the `aws-actions/configure-aws-credentials@v4` action to securely configure AWS credentials using GitHub’s OIDC.
-   - Verifies AWS authentication by retrieving the caller identity.
 
----
-
-## 2. Pipeline Walk-through
-### Build and Push Docker Images
-# CI/CD Pipeline Summary
-
-This document provides a concise overview of the GitHub Actions pipeline used to build, push, and deploy Docker images, along with secure AWS integration.
-
-## Pipeline Walk-through
+##  Pipeline Walk-through
 
 ### 1. Build and Push Docker Images
 - **Checkout Repository**: The pipeline starts with checking out the code.
@@ -131,6 +112,8 @@ This document provides a concise overview of the GitHub Actions pipeline used to
 - **OIDC Integration**: Securely connects to AWS without static credentials.
 - **Separation of Concerns**: Jobs are clearly divided for easier maintenance and troubleshooting.
 
+![Docker](dev/Docker.png)
+
 ## Summary
 - **Automation**: Docker images for the Main API and Auxiliary Service are automatically built and pushed.
 - **Deployment**: Kubernetes deployment files are updated with the new image tags.
@@ -138,7 +121,7 @@ This document provides a concise overview of the GitHub Actions pipeline used to
 - **Best Practices**: The pipeline follows modern CI/CD and infrastructure security guidelines.
 
 
-# Kubernetes Cluster Setup
+# 🌍 Kubernetes Cluster Setup
 
 ## ⚙️ 1. Prerequisites
 
@@ -149,8 +132,8 @@ Ensure you have:
 - **Helm 3** installed for deploying charts. ([Helm Installation](https://helm.sh/docs/intro/install/))
 - Sufficient system resources (CPU/RAM) for Minikube.
 
-## 2. Overview
-This setup deploys the project into a local Kubernetes cluster (using Minikube) and includes:
+## 📌 2. Overview
+Deploy the project into a local Kubernetes cluster (using Minikube) and include:
 - **ArgoCD** for deployment management.
 - Separate namespaces for the **Main API** and **Auxiliary Service**.
 - **Prometheus** and **Grafana** for observability (installed via Helm).
@@ -170,7 +153,6 @@ This setup deploys the project into a local Kubernetes cluster (using Minikube) 
        `-- main-service.yaml
 ```
 
-To keep it short:
 ## 4. Setup Steps
 
 ### 4.1 Minikube Setup
@@ -193,6 +175,7 @@ Retrieve the ArgoCD admin password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 Access the ArgoCD UI at https://localhost:8080/.
+![ArgoCD](dev/ArgoCD.png)
 
 ### 4.3 Prometheus Installation
 ```sh
@@ -208,6 +191,8 @@ kubectl -n monitoring port-forward $POD_NAME 9090
 ```
 Access the Prometheus UI at http://localhost:9090/.
 
+![Prometheus](dev/Prometheus.png)
+
 ### 4.4 Grafana Installation
 ```sh
 helm repo add grafana https://grafana.github.io/helm-charts
@@ -221,6 +206,8 @@ Retrieve Grafana's admin password:
 kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-password}" | base64 --decode ; echo
 ```
 Access Grafana at http://localhost:3000/ (default username: admin).
+
+![Grafana](dev/Grafana.png)
 
 ### 4.5 Create Kubernetes Namespaces
 Create separate namespaces for deployments:
@@ -245,10 +232,10 @@ Prometheus and Grafana (in the monitoring namespace) provide observability and d
 Kubernetes resources are deployed using kubectl apply -f commands on the respective directories.
 
 
-# Microservices Implementation
+# 🌍 Microservices Implementation
 
-## Overview
-This project implements two microservices using Python and FastAPI:
+## 📌 Overview
+Implement two microservices using Python and FastAPI:
 
 - **Main API**: Exposes endpoints to list S3 buckets, list all AWS Parameter Store parameters, and retrieve a specific parameter's value.
 - **Auxiliary Service**: Handles direct AWS interactions (using boto3) to fetch S3 buckets and Parameter Store data.
@@ -275,10 +262,14 @@ Each API response includes both the Main API version and the Auxiliary Service v
   Lists all parameters from AWS Parameter Store.
 - **GET /parameter/{param_name}**  
   Retrieves the value of a specific parameter.
+![CURL Example](dev/curl.png)
 
 Each response includes:
 - `main_version`: e.g. "1.0.0" (Main API version)
 - `aux_version`: e.g. "1.0.0" (Auxiliary Service version)
+
+<img src="dev/parameters.png" alt="Parameters" width="200" />
+<img src="dev/S3-buckets.png" alt="S3 Buckets" width="200" />
 
 ## Summary
 - **Separation of Concerns**: The Auxiliary Service handles AWS interactions while the Main API aggregates responses and adds version information.

@@ -112,7 +112,7 @@ The GitHub Actions workflow (named **Build & Deploy**) consists of three main jo
 - **OIDC Integration**: Securely connects to AWS without static credentials.
 - **Separation of Concerns**: Jobs are clearly divided for easier maintenance and troubleshooting.
 
-![Docker](dev/Docker.png)
+![Docker](pictures/Docker.png)
 
 ## Summary
 - **Automation**: Docker images for the Main API and Auxiliary Service are automatically built and pushed.
@@ -175,7 +175,7 @@ Retrieve the ArgoCD admin password:
 kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath="{.data.password}" | base64 -d
 ```
 Access the ArgoCD UI at https://localhost:8080/.
-![ArgoCD](dev/ArgoCD.png)
+![ArgoCD](pictures/ArgoCD.png)
 
 ### 4.3 Prometheus Installation
 ```sh
@@ -191,7 +191,7 @@ kubectl -n monitoring port-forward $POD_NAME 9090
 ```
 Access the Prometheus UI at http://localhost:9090/.
 
-![Prometheus](dev/Prometheus.png)
+![Prometheus](pictures/Prometheus.png)
 
 ### 4.4 Grafana Installation
 ```sh
@@ -207,7 +207,7 @@ kubectl get secret --namespace monitoring grafana -o jsonpath="{.data.admin-pass
 ```
 Access Grafana at http://localhost:3000/ (default username: admin).
 
-![Grafana](dev/Grafana.png)
+![Grafana](pictures/Grafana.png)
 
 ### 4.5 Create Kubernetes Namespaces
 Create separate namespaces for deployments:
@@ -262,14 +262,14 @@ Each API response includes both the Main API version and the Auxiliary Service v
   Lists all parameters from AWS Parameter Store.
 - **GET /parameter/{param_name}**  
   Retrieves the value of a specific parameter.
-![CURL Example](dev/curl.png)
+![CURL Example](pictures/curl.png)
 
 Each response includes:
 - `main_version`: e.g. "1.0.0" (Main API version)
 - `aux_version`: e.g. "1.0.0" (Auxiliary Service version)
 
-<img src="dev/parameters.png" alt="Parameters" width="200" />
-<img src="dev/S3-buckets.png" alt="S3 Buckets" width="200" />
+<img src="pictures/parameters.png" alt="Parameters" width="200" />
+<img src="pictures/S3-buckets.png" alt="S3 Buckets" width="200" />
 
 ## Summary
 - **Separation of Concerns**: The Auxiliary Service handles AWS interactions while the Main API aggregates responses and adds version information.
